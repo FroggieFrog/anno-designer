@@ -1,18 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AnnoDesigner.Core.Helper
 {
     public static class ConnectivityHelper
     {
+        private static HttpClient _httpClient;
         private const string URL = @"https://www.github.com";
         private const string SECOND_URL = @"https://www.google.com";
-        private const string REQUEST_METHOD_HEAD = "HEAD";
+
+        public static HttpClient LocalHttpClient
+        {
+            get
+            {
+                if (_httpClient == null)
+                {
+                    var handler = new HttpClientHandler();
+                    if (handler.SupportsAutomaticDecompression)
+                    {
+                        handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+                    }
+
+                    _httpClient = new HttpClient(handler, true);
+                    _httpClient.Timeout = TimeSpan.FromSeconds(30);
+                    _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue($"anno-designer-81", "1.0"));
+
+                    //detect DNS changes (default is infinite)
+                    //ServicePointManager.FindServicePoint(new Uri(BASE_URI)).ConnectionLeaseTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    //defaut is 2 minutes
+                    ServicePointManager.DnsRefreshTimeout = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                    //increases the concurrent outbound connections
+                    if (ServicePointManager.DefaultConnectionLimit < 1024)
+                    {
+                        ServicePointManager.DefaultConnectionLimit = 1024;
+                    }
+                    //only allow secure protocols
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                }
+
+                return _httpClient;
+            }
+        }
 
         public static async Task<bool> IsConnected()
         {
@@ -20,19 +52,12 @@ namespace AnnoDesigner.Core.Helper
 
             var isInternetAvailable = false;
 
-            var request = WebRequest.CreateHttp(URL);
-            request.Timeout = TimeSpan.FromSeconds(5).Milliseconds;
-            request.Credentials = CredentialCache.DefaultCredentials;
-            request.Method = REQUEST_METHOD_HEAD;
-
             try
             {
-                using (var response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false))
-                {
-                    isInternetAvailable = response.StatusCode == HttpStatusCode.OK;
-                }
+                var requestResult = await LocalHttpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, URL)).ConfigureAwait(false);
+                isInternetAvailable = requestResult.IsSuccessStatusCode;
             }
-            catch (WebException)
+            catch (Exception ex)
             {
                 isInternetAvailable = false;
             }
@@ -40,19 +65,12 @@ namespace AnnoDesigner.Core.Helper
             //service outage? try second url
             if (!isInternetAvailable)
             {
-                request = WebRequest.CreateHttp(SECOND_URL);
-                request.Timeout = TimeSpan.FromSeconds(5).Milliseconds;
-                request.Credentials = CredentialCache.DefaultCredentials;
-                request.Method = REQUEST_METHOD_HEAD;
-
                 try
                 {
-                    using (var response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false))
-                    {
-                        isInternetAvailable = response.StatusCode == HttpStatusCode.OK;
-                    }
+                    var requestResult = await LocalHttpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, SECOND_URL)).ConfigureAwait(false);
+                    isInternetAvailable = requestResult.IsSuccessStatusCode;
                 }
-                catch (WebException)
+                catch (Exception ex)
                 {
                     isInternetAvailable = false;
                 }
