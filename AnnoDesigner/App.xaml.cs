@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
 using System.Reflection;
@@ -43,6 +44,8 @@ namespace AnnoDesigner
 
             _updateHelper = new UpdateHelper(ApplicationPath, _appSettings, _messageBoxService, _localizationHelper);
             _fileSystem = new FileSystem();
+
+            Trace.Listeners.Add(new NLogTraceListener());
         }
 
         public App()
@@ -104,7 +107,7 @@ namespace AnnoDesigner
         private static string _applicationPath;
         public static string ApplicationPath
         {
-            get 
+            get
             {
                 if (_applicationPath is null)
                 {
