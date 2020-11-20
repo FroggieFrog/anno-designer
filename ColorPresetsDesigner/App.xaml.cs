@@ -1,17 +1,12 @@
-﻿using ColorPresetsDesigner.ViewModels;
-using NLog;
-using NLog.Targets;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using ColorPresetsDesigner.ViewModels;
+using NLog;
+using NLog.Targets;
 
 namespace ColorPresetsDesigner
 {
@@ -21,6 +16,11 @@ namespace ColorPresetsDesigner
     public partial class App : Application
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+        static App()
+        {
+            Trace.Listeners.Add(new NLogTraceListener());
+        }
 
         public App()
         {
