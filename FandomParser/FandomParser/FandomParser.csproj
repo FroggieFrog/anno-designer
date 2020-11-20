@@ -1,23 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <RootNamespace>FandomParser</RootNamespace>
+    <AssemblyName>FandomParser</AssemblyName>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWpf>true</UseWpf>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AnnoDesigner.Core">
-      <HintPath>..\..\AnnoDesigner.Core\bin\$(Configuration)\net472\AnnoDesigner.Core.dll</HintPath>
+      <HintPath>..\..\AnnoDesigner.Core\bin\$(Configuration)\net5.0-windows\AnnoDesigner.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CXuesong.MW.WikiClientLibrary" Version="0.7.2" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="NLog" Version="4.7.2" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="CXuesong.MW.WikiClientLibrary" Version="0.7.3" />
+    <PackageReference Include="NLog" Version="4.7.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FandomParser.Core\FandomParser.Core.csproj" />
     <ProjectReference Include="..\InfoboxParser\InfoboxParser.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

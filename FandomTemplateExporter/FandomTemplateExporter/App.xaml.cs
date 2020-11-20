@@ -22,6 +22,11 @@ namespace FandomTemplateExporter
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        static App()
+        {
+            Trace.Listeners.Add(new NLogTraceListener());
+        }
+
         public App()
         {
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>

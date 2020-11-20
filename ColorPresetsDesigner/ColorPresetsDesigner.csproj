@@ -18,7 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AnnoDesigner.Core">
-      <HintPath>..\AnnoDesigner\bin\$(Configuration)\net472\AnnoDesigner.Core.dll</HintPath>
+      <HintPath>..\AnnoDesigner\bin\$(Configuration)\net5.0-windows\AnnoDesigner.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -40,6 +40,8 @@ namespace FandomParser
 
         static Program()
         {
+            Trace.Listeners.Add(new NLogTraceListener());
+
             logger.Info($"program version: {Assembly.GetExecutingAssembly().GetName().Version}");
 
             _commons = Commons.Instance;
