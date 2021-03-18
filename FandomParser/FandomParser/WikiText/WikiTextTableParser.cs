@@ -111,6 +111,10 @@ namespace FandomParser.WikiText
             {
                 result = WorldRegion.Arctic;
             }
+            else if (parsedRegionHeader.Equals("Enbesa buildings", StringComparison.OrdinalIgnoreCase))
+            {
+                result = WorldRegion.Enbesa;
+            }
 
             return result;
         }
@@ -264,6 +268,12 @@ namespace FandomParser.WikiText
                     continue;
                 }
 
+                //line could be garbage
+                if (curLine.Equals("|}", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
                 //line contains description
                 if (!curLine.StartsWith("|", StringComparison.OrdinalIgnoreCase) &&
                     !curLine.StartsWith("(", StringComparison.OrdinalIgnoreCase) &&
@@ -357,7 +367,7 @@ namespace FandomParser.WikiText
             }
 
             //add last entry
-            if (curEntry != null && !allEntries.Contains(curEntry))
+            if (curEntry != null && curEntry.Name != null && !allEntries.Contains(curEntry))
             {
                 allEntries.Add(curEntry);
             }

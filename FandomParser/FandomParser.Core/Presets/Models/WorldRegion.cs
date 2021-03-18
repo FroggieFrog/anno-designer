@@ -11,6 +11,7 @@ namespace FandomParser.Core.Presets.Models
         Unknown,
         OldWorld,
         NewWorld,
-        Arctic
+        Arctic,
+        Enbesa
     }
 }

@@ -1,0 +1,245 @@
+{{Infobox Buildings 4 Regions
+|Building Icon      = Depot.png
+|Tab A               = Old World
+|Title A            = Depot
+|Image A             = DepotOW1Screenshot.jpg
+|Caption A           = 
+|Credits A           = 2500
+|Maintenance A       = -20
+|Workforce Type A    =
+|Workforce Amount A  = 
+|Attractiveness A    = 
+|Influence A         = 
+|Timber A            = 10
+|Bricks A            = 10
+|Wanza Timber A      =
+|Mud Bricks A        =
+|Steel Beams A       = 
+|Windows A           = 
+|Concrete A          = 
+|Weapons A           = 
+|Advanced Weapons A  = 
+
+|Input 1 Amount A    = 
+|Input 1 Amount Electricity A    =
+|Input 1 Icon A      = 
+|Input 2 Amount A    = 
+|Input 2 Amount Electricity A    =
+|Input 2 Icon A      = 
+|Produces Amount A   = 
+|Produces Amount Electricity A   =
+|Produces Icon A     = 
+|Supplies 1 Amount A = 
+|Supplies 1 Amount Electricity A = 
+|Supplies 1 Type A   = 
+|Supplies 2 Amount A = 
+|Supplies 2 Amount Electricity A = 
+|Supplies 2 Type A   = 
+|Supplies 3 Amount A = 
+|Supplies 3 Amount Electricity A = 
+|Supplies 3 Type A   = 
+|Supplies 4 Amount A = 
+|Supplies 4 Amount Electricity A = 
+|Supplies 4 Type A   = 
+
+|Building Type A     = Harbour
+|Building Size A     = 4x10
+|Building Range A    = 
+|Hitpoints A         = 3000
+|DPS (damage per second) A  =
+|Max. Damage per shot A     =
+|Attack cooldown A          =
+|Requires A          = Free harbour area
+|Modules Amount A    = 
+|Modules Size A      = 
+|Cost Per Module A   = 
+|Unlock Condition 1 Amount A   = 150
+|Unlock Condition 1 Type A     = Workers
+|Unlock Condition 2 Amount A   = 
+|Unlock Condition 2 Type A     =
+
+|Tab B               = New World
+|Title B             = Depot
+|Image B             = DepotNW2Screenshot.jpg
+|Caption B           = 
+|Credits B           = 2500
+|Maintenance B       = -20
+|Workforce Type B    =
+|Workforce Amount B  = 
+|Attractiveness B    = 
+|Influence B         = 
+|Timber B            = 10
+|Bricks B            = 10
+|Wanza Timber B      =
+|Mud Bricks B        =
+|Steel Beams B       = 
+|Windows B           = 
+|Concrete B          = 
+|Weapons B           = 
+|Advanced Weapons B  = 
+
+|Input 1 Amount B    = 
+|Input 1 Amount Electricity B    =
+|Input 1 Icon B      = 
+|Input 2 Amount B    = 
+|Input 2 Amount Electricity B    =
+|Input 2 Icon B      = 
+|Produces Amount B   = 
+|Produces Amount Electricity B   =
+|Produces Icon B     = 
+|Supplies 1 Amount B = 
+|Supplies 1 Amount Electricity B = 
+|Supplies 1 Type B   = 
+|Supplies 2 Amount B = 
+|Supplies 2 Amount Electricity B = 
+|Supplies 2 Type B   = 
+|Supplies 3 Amount B = 
+|Supplies 3 Amount Electricity B = 
+|Supplies 3 Type B   = 
+|Supplies 4 Amount B = 
+|Supplies 4 Amount Electricity B = 
+|Supplies 4 Type B   = 
+
+|Building Type B     = Harbour
+|Building Size B     = 4x10
+|Building Range B    = 
+|Hitpoints B         = 3000
+|DPS (damage per second) B  =
+|Max. Damage per shot B     =
+|Attack cooldown B          =
+|Requires B          = Free harbour area
+|Modules Amount B    = 
+|Modules Size B      = 
+|Cost Per Module B   = 
+|Unlock Condition 1 Amount B   = 100
+|Unlock Condition 1 Type B     = Jornaleros
+|Unlock Condition 2 Amount B   = 
+|Unlock Condition 2 Type B     =
+
+|Tab C               = Arctic
+|Title C             = Depot
+|Image C             = 
+|Caption C           = 
+|Credits C           = 4000
+|Maintenance C       = -50
+|Workforce Type C    =
+|Workforce Amount C  = 
+|Attractiveness C    = 
+|Influence C         = 
+|Timber C            = 10
+|Bricks C            =
+|Wanza Timber C      =
+|Mud Bricks C        =
+|Steel Beams C       = 5
+|Windows C           = 
+|Concrete C          = 
+|Weapons C           = 
+|Advanced Weapons C  = 
+
+|Input 1 Amount C    = 
+|Input 1 Amount Electricity C    =
+|Input 1 Icon C      = 
+|Input 2 Amount C    = 
+|Input 2 Amount Electricity C    =
+|Input 2 Icon C      = 
+|Produces Amount C   = 
+|Produces Amount Electricity C   =
+|Produces Icon C     = 
+|Supplies 1 Amount C = 
+|Supplies 1 Amount Electricity C = 
+|Supplies 1 Type C   = 
+|Supplies 2 Amount C = 
+|Supplies 2 Amount Electricity C = 
+|Supplies 2 Type C   = 
+|Supplies 3 Amount C = 
+|Supplies 3 Amount Electricity C = 
+|Supplies 3 Type C   = 
+|Supplies 4 Amount C = 
+|Supplies 4 Amount Electricity C = 
+|Supplies 4 Type C   = 
+
+|Building Type C     = Harbour
+|Building Size C     = 4x10
+|Building Range C    = 
+|Hitpoints C         = 3000
+|DPS (damage per second) C  =
+|Max. Damage per shot C     =
+|Attack cooldown C          =
+|Requires C          = The Passage DLC<br>Free harbour area
+|Modules Amount C    = 
+|Modules Size C      = 
+|Cost Per Module C   = 
+|Unlock Condition 1 Amount C   = 1
+|Unlock Condition 1 Type C     = Technicians
+|Unlock Condition 2 Amount C   = 
+|Unlock Condition 2 Type C     =
+
+|Tab D               = Enbesa
+|Title D             = Depot
+|Image D             = DepotEnbesaScreenshot.jpg
+|Caption D           = 
+|Credits D           = 2500
+|Maintenance D       = -20
+|Workforce Type D    =
+|Workforce Amount D  = 
+|Attractiveness D    = 
+|Influence D         = 
+|Timber D            = 
+|Bricks D            =
+|Wanza Timber D      = 10
+|Mud Bricks D        =
+|Steel Beams D       = 
+|Windows D           = 
+|Concrete D          = 
+|Weapons D           = 
+|Advanced Weapons D  = 
+
+|Input 1 Amount D    = 
+|Input 1 Amount Electricity D    =
+|Input 1 Icon D      = 
+|Input 2 Amount D    = 
+|Input 2 Amount Electricity D    =
+|Input 2 Icon D      = 
+|Produces Amount D   = 
+|Produces Amount Electricity D   =
+|Produces Icon D     = 
+|Supplies 1 Amount D = 
+|Supplies 1 Amount Electricity D = 
+|Supplies 1 Type D   = 
+|Supplies 2 Amount D = 
+|Supplies 2 Amount Electricity D = 
+|Supplies 2 Type D   = 
+|Supplies 3 Amount D = 
+|Supplies 3 Amount Electricity D = 
+|Supplies 3 Type D   = 
+|Supplies 4 Amount D = 
+|Supplies 4 Amount Electricity D = 
+|Supplies 4 Type D   = 
+
+|Building Type D     = Harbour
+|Building Size D     = 4x10
+|Building Range D    = 
+|Hitpoints D         = 3000
+|DPS (damage per second) D  =
+|Max. Damage per shot D     =
+|Attack cooldown D          =
+|Requires D          = Land of Lions DLC<br>Free harbour area
+|Modules Amount D    = 
+|Modules Size D      = 
+|Cost Per Module D   = 
+|Unlock Condition 1 Amount D   = 150
+|Unlock Condition 1 Type D     = Shepherds
+|Unlock Condition 2 Amount D   = 
+|Unlock Condition 2 Type D     =
+}}The '''Depot''' is a coastal building which provides an additional ''+50'' to the storage capacity of an island (in addition to any extra storage provided by the player upgrading their [[Trading Post]]). Multiple depots can be built within the harbour area of an island.
+
+== Gallery ==
+<gallery>
+DepotOW1Screenshot.jpg|Old World Depot - version 1
+DepotOW2Screenshot.jpg|Old World Depot - version 2
+DepotNW2Screenshot.jpg|New World Depot - version 1
+DepotNW1Screenshot.jpg|New World Depot - version 2
+</gallery>
+
+{{Navbox Buildings}}
+[[Category:Harbour buildings]]

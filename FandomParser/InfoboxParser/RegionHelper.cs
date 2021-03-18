@@ -31,6 +31,9 @@ namespace InfoboxParser
                 case "Arctic":
                     result = WorldRegion.Arctic;
                     break;
+                case "Enbesa":
+                    result = WorldRegion.Enbesa;
+                    break;
                 default:
                     logger.Debug($"could not parse region: {regionName}");
                     break;

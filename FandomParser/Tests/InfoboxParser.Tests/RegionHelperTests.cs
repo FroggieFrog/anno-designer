@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FandomParser.Core.Presets.Models;
+﻿using FandomParser.Core.Presets.Models;
 using InfoboxParser.Models;
 using Xunit;
 using Xunit.Abstractions;
@@ -53,6 +48,7 @@ namespace InfoboxParser.Tests
         [InlineData("New World", WorldRegion.NewWorld)]
         [InlineData("The Arctic", WorldRegion.Arctic)]
         [InlineData("Arctic", WorldRegion.Arctic)]
+        [InlineData("Enbesa", WorldRegion.Enbesa)]
         public void GetRegion_RegionNameIsGiven_ShouldReturnExpectedResult(string regionName, WorldRegion expectedRegion)
         {
             // Arrange

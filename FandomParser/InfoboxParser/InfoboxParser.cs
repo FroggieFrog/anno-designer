@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using FandomParser.Core;
 using FandomParser.Core.Models;
-using FandomParser.Core.Presets.Models;
 using InfoboxParser.Models;
-using System.Runtime.CompilerServices;
 using InfoboxParser.Parser;
 
 [assembly: InternalsVisibleTo("InfoboxParser.Tests")]
@@ -28,6 +21,7 @@ namespace InfoboxParser
         private readonly IParserMultipleRegions parserMultipleRegions;
         private readonly List<string> possibleRegions_2Regions;
         private readonly List<string> possibleRegions_3Regions;
+        private readonly List<string> possibleRegions_4Regions;
 
         public InfoboxParser(ICommons commonsToUse, ITitleParserSingle titleParserSingleToUse, ISpecialBuildingNameHelper specialBuildingNameHelperToUse, IRegionHelper regionHelperToUse)
         {
@@ -41,6 +35,7 @@ namespace InfoboxParser
             parserMultipleRegions = new ParserMultipleRegions(_commons, _specialBuildingNameHelper, _regionHelper);
             possibleRegions_2Regions = new List<string> { "A", "B" };
             possibleRegions_3Regions = new List<string> { "A", "B", "C" };
+            possibleRegions_4Regions = new List<string> { "A", "B", "C", "D" };
         }
 
         public List<IInfobox> GetInfobox(string wikiText)
@@ -68,6 +63,12 @@ namespace InfoboxParser
             else if (wikiText.StartsWith(_commons.InfoboxTemplateStart3Regions))
             {
                 var infoboxes = parserMultipleRegions.GetInfobox(wikiText, possibleRegions_3Regions);
+
+                result.AddRange(infoboxes);
+            }
+            else if (wikiText.StartsWith(_commons.InfoboxTemplateStart4Regions))
+            {
+                var infoboxes = parserMultipleRegions.GetInfobox(wikiText, possibleRegions_4Regions);
 
                 result.AddRange(infoboxes);
             }

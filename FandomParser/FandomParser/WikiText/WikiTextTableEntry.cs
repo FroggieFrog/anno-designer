@@ -15,6 +15,11 @@ namespace FandomParser.WikiText
     [DataContract]
     public class WikiTextTableEntry
     {
+        public WikiTextTableEntry()
+        {
+            Size = string.Empty;
+        }
+
         [DataMember(Order = 0)]
         public string Name { get; set; }
 

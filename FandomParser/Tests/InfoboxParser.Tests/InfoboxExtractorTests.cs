@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FandomParser.Core;
 using InfoboxParser.Models;
 using InfoboxParser.Parser;
@@ -30,6 +26,8 @@ namespace InfoboxParser.Tests
         private static readonly string result_Lumberjack;
         private static readonly string input_Sawmill;
         private static readonly string result_Sawmill;
+        private static readonly string input_depot_4regions;
+        private static readonly string result_depot_4regions;
 
         static InfoboxExtractorTests()
         {
@@ -55,6 +53,9 @@ namespace InfoboxParser.Tests
 
             input_Sawmill = File.ReadAllText(Path.Combine(basePath, "Testdata", "Extractor", "input_Sawmill.txt"));
             result_Sawmill = File.ReadAllText(Path.Combine(basePath, "Testdata", "Extractor", "result_Sawmill.infobox"));
+
+            input_depot_4regions = File.ReadAllText(Path.Combine(basePath, "Testdata", "Extractor", "input_depot_4regions.txt"));
+            result_depot_4regions = File.ReadAllText(Path.Combine(basePath, "Testdata", "Extractor", "result_depot_4regions.infobox"));
         }
 
         public InfoboxExtractorTests(ITestOutputHelper testOutputHelperToUse)
@@ -83,6 +84,7 @@ namespace InfoboxParser.Tests
                     { input_Hospital, (null, result_Hospital) },
                     { input_Lumberjack, (null, result_Lumberjack) },
                     { input_Sawmill, (null, result_Sawmill) },
+                    { input_depot_4regions, (null, result_depot_4regions) },
                 };
             }
         }
@@ -125,12 +127,13 @@ namespace InfoboxParser.Tests
         {
             // Arrange
             _output.WriteLine($"{nameof(content)}: {content}");
-            _output.WriteLine($"{nameof(expectedResult)}: {expectedResult}");
+            _output.WriteLine($"{nameof(expectedResult)}: {expectedResult.infobox}");
 
             var extractor = GetExtractor();
 
             // Act
             var result = extractor.ExtractInfobox(content);
+            _output.WriteLine($"{nameof(result)}: {result[0].infobox}");
 
             // Assert
             Assert.Single(result);

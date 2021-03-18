@@ -10,12 +10,12 @@ namespace FandomParser.WikiText
     {
         public bool Equals(WikiTextTableEntry x, WikiTextTableEntry y)
         {
-            if (x == null && y == null)
+            if (x is null && y is null)
             {
                 return true;
             }
 
-            if (x == null || y == null)
+            if (x is null || y is null)
             {
                 return false;
             }
@@ -33,7 +33,7 @@ namespace FandomParser.WikiText
 
         public int GetHashCode(WikiTextTableEntry obj)
         {
-            if (obj == null)
+            if (obj is null || obj.Name is null)
             {
                 return -1;
             }

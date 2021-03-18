@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FandomParser.Core
+﻿namespace FandomParser.Core
 {
     public interface ICommons
     {
@@ -11,6 +7,8 @@ namespace FandomParser.Core
         string InfoboxTemplateStart2Regions { get; }
 
         string InfoboxTemplateStart3Regions { get; }
+
+        string InfoboxTemplateStart4Regions { get; }
 
         string InfoboxTemplateStartOldAndNewWorld { get; }
 

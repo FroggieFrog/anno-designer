@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using FandomParser.Core;
 using InfoboxParser.Models;
@@ -35,6 +33,7 @@ namespace InfoboxParser
             var indexInfoboxOldAndNewWorldStart = content.IndexOf(_commons.InfoboxTemplateStartOldAndNewWorld, StringComparison.OrdinalIgnoreCase);
             var indexInfobox2RegionsStart = content.IndexOf(_commons.InfoboxTemplateStart2Regions, StringComparison.OrdinalIgnoreCase);
             var indexInfobox3RegionsStart = content.IndexOf(_commons.InfoboxTemplateStart3Regions, StringComparison.OrdinalIgnoreCase);
+            var indexInfobox4RegionsStart = content.IndexOf(_commons.InfoboxTemplateStart4Regions, StringComparison.OrdinalIgnoreCase);
             var indexInfoboxStart = content.IndexOf(_commons.InfoboxTemplateStart, StringComparison.OrdinalIgnoreCase);
             var isInfoboxMultiple = false;
 
@@ -51,6 +50,11 @@ namespace InfoboxParser
             else if (indexInfobox3RegionsStart != -1)
             {
                 startIndex = indexInfobox3RegionsStart;
+                isInfoboxMultiple = true;
+            }
+            else if (indexInfobox4RegionsStart != -1)
+            {
+                startIndex = indexInfobox4RegionsStart;
                 isInfoboxMultiple = true;
             }
             else if (indexInfoboxStart != -1)

@@ -22,6 +22,7 @@ namespace InfoboxParser.Tests
         private static readonly IRegionHelper _mockedRegionHelper;
         private static readonly List<string> _regionList2Regions;
         private static readonly List<string> _regionList3Regions;
+        private static readonly List<string> _regionList4Regions;
 
         #region ctor
 
@@ -33,6 +34,7 @@ namespace InfoboxParser.Tests
 
             _regionList2Regions = new List<string> { "A", "B" };
             _regionList3Regions = new List<string> { "A", "B", "C" };
+            _regionList4Regions = new List<string> { "A", "B", "C", "D" };
         }
 
         public ParserMultipleRegionsTests(ITestOutputHelper testOutputHelperToUse)
@@ -384,6 +386,22 @@ namespace InfoboxParser.Tests
 
             // Act
             var result = parser.GetInfobox(input, _regionList3Regions);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(" ")]
+        [InlineData("")]
+        public void GetInfobox_4Regions_WikiTextIsNullOrWhiteSpace_ShouldReturnNull(string input)
+        {
+            // Arrange
+            var parser = GetParser();
+
+            // Act
+            var result = parser.GetInfobox(input, _regionList4Regions);
 
             // Assert
             Assert.Null(result);
