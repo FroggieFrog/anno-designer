@@ -46,6 +46,8 @@ namespace AnnoDesigner.Export
         private const string HEADER_STEEL_BEAMS = "Steel beams";
         private const string HEADER_WINDOWS = "Windows";
         private const string HEADER_REINFORCED_CONCRETE = "Reinforced concrete";
+        private const string HEADER_WANZA_TIMBER = "Wanza timber";
+        private const string HEADER_MUD_BRICKS = "Mud bricks";
         private const string HEADER_BALANCE = "Balance";
         private const string HEADER_FARMERS_WORKFORCE = "Farmers workforce";
         private const string HEADER_WORKERS_WORKFORCE = "Workers workforce";
@@ -55,6 +57,8 @@ namespace AnnoDesigner.Export
         private const string HEADER_OBREROS_WORKFORCE = "Obreros workforce";
         private const string HEADER_EXPLORERS_WORKFORCE = "Explorers workforce";
         private const string HEADER_TECHNICIANS_WORKFORCE = "Technicians workforce";
+        private const string HEADER_SHEPHERDS_WORKFORCE = "Shepherds workforce";
+        private const string HEADER_ELDERS_WORKFORCE = "Elders workforce";
         private const string HEADER_ATTRACTIVENESS = "Attractiveness";
         private const string HEADER_INFLUENCE = "Influence";
         private const string HEADER_PRODUCTION = "Production ";
@@ -334,6 +338,8 @@ namespace AnnoDesigner.Export
             double steelBeams = 0;
             double windows = 0;
             double reinforcedConcrete = 0;
+            double wanzaTimber = 0;
+            double mudBricks = 0;
 
             var groupedBuildings = placedObjects.Where(x => !x.Road && !string.IsNullOrWhiteSpace(x.Identifier) && !x.Identifier.Equals("Unknown Object", StringComparison.OrdinalIgnoreCase)).GroupBy(x => x.Identifier);
             foreach (var curGroup in groupedBuildings)
@@ -390,6 +396,20 @@ namespace AnnoDesigner.Export
                 {
                     reinforcedConcrete += (foundReinforcedConcreteEntry.Value * buildingCount);
                 }
+
+                //get wanza timber
+                var foundWanzaTimberEntry = foundWikiBuildingInfo.ConstructionInfos.FirstOrDefault(x => x.Unit.Name.Equals("Wanza Timber", StringComparison.OrdinalIgnoreCase));
+                if (foundWanzaTimberEntry != null)
+                {
+                    wanzaTimber += (foundWanzaTimberEntry.Value * buildingCount);
+                }
+
+                //get mud bricks
+                var foundMudBricksEntry = foundWikiBuildingInfo.ConstructionInfos.FirstOrDefault(x => x.Unit.Name.Equals("Mud Bricks", StringComparison.OrdinalIgnoreCase));
+                if (foundMudBricksEntry != null)
+                {
+                    mudBricks += (foundMudBricksEntry.Value * buildingCount);
+                }
             }
 
             //add info to template
@@ -398,7 +418,9 @@ namespace AnnoDesigner.Export
                 .Append(TEMPLATE_LINE_START).Append(HEADER_BRICKS).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(bricks > 0 ? bricks.ToString("0") : string.Empty)
                 .Append(TEMPLATE_LINE_START).Append(HEADER_STEEL_BEAMS).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(steelBeams > 0 ? steelBeams.ToString("0") : string.Empty)
                 .Append(TEMPLATE_LINE_START).Append(HEADER_WINDOWS).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(windows > 0 ? windows.ToString("0") : string.Empty)
-                .Append(TEMPLATE_LINE_START).Append(HEADER_REINFORCED_CONCRETE).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(reinforcedConcrete > 0 ? reinforcedConcrete.ToString("0") : string.Empty);
+                .Append(TEMPLATE_LINE_START).Append(HEADER_REINFORCED_CONCRETE).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(reinforcedConcrete > 0 ? reinforcedConcrete.ToString("0") : string.Empty)
+                .Append(TEMPLATE_LINE_START).Append(HEADER_WANZA_TIMBER).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(wanzaTimber > 0 ? wanzaTimber.ToString("0") : string.Empty)
+                .Append(TEMPLATE_LINE_START).Append(HEADER_MUD_BRICKS).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(mudBricks > 0 ? mudBricks.ToString("0") : string.Empty);
 
             return exportString;
         }
@@ -413,6 +435,8 @@ namespace AnnoDesigner.Export
             double obreros = 0;
             double explorers = 0;
             double technicians = 0;
+            double shepherds = 0;
+            double elders = 0;
 
             var groupedBuildings = placedObjects.Where(x => !x.Road && !string.IsNullOrWhiteSpace(x.Identifier) && !x.Identifier.Equals("Unknown Object", StringComparison.OrdinalIgnoreCase)).GroupBy(x => x.Identifier);
             foreach (var curGroup in groupedBuildings)
@@ -483,6 +507,20 @@ namespace AnnoDesigner.Export
                 {
                     technicians += (foundTechniciansEntry.Value * buildingCount);
                 }
+
+                //get shepherds
+                var foundShepherdsEntry = foundWikiBuildingInfo.MaintenanceInfos.FirstOrDefault(x => x.Unit.Name.Equals("Workforce Shepherds", StringComparison.OrdinalIgnoreCase));
+                if (foundShepherdsEntry != null)
+                {
+                    shepherds += (foundShepherdsEntry.Value * buildingCount);
+                }
+
+                //get elders
+                var foundEldersEntry = foundWikiBuildingInfo.MaintenanceInfos.FirstOrDefault(x => x.Unit.Name.Equals("Workforce Elders", StringComparison.OrdinalIgnoreCase));
+                if (foundEldersEntry != null)
+                {
+                    elders += (foundEldersEntry.Value * buildingCount);
+                }
             }
 
             //add info to template
@@ -494,7 +532,9 @@ namespace AnnoDesigner.Export
                 .Append(TEMPLATE_LINE_START).Append(HEADER_OBREROS_WORKFORCE).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(obreros != 0 ? obreros.ToString("0") : string.Empty)
                 .Append(TEMPLATE_LINE_START).Append(HEADER_OBREROS_WORKFORCE).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(obreros != 0 ? obreros.ToString("0") : string.Empty)
                 .Append(TEMPLATE_LINE_START).Append(HEADER_EXPLORERS_WORKFORCE).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(explorers != 0 ? explorers.ToString("0") : string.Empty)
-                .Append(TEMPLATE_LINE_START).Append(HEADER_TECHNICIANS_WORKFORCE).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(technicians != 0 ? technicians.ToString("0") : string.Empty);
+                .Append(TEMPLATE_LINE_START).Append(HEADER_TECHNICIANS_WORKFORCE).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(technicians != 0 ? technicians.ToString("0") : string.Empty)
+                .Append(TEMPLATE_LINE_START).Append(HEADER_SHEPHERDS_WORKFORCE).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(shepherds != 0 ? shepherds.ToString("0") : string.Empty)
+                .Append(TEMPLATE_LINE_START).Append(HEADER_ELDERS_WORKFORCE).Append(TEMPLATE_ENTRY_DELIMITER).AppendLine(elders != 0 ? elders.ToString("0") : string.Empty);
 
             return exportString;
         }
@@ -572,6 +612,14 @@ namespace AnnoDesigner.Export
             if (buildingFaction?.Contains("Obreros") == true || buildingFaction?.Contains("Jornaleros") == true)
             {
                 buildingRegion = WorldRegion.NewWorld;
+            }
+            else if (buildingFaction?.Contains("Explorers") == true || buildingFaction?.Contains("Technicians") == true)
+            {
+                buildingRegion = WorldRegion.Arctic;
+            }
+            else if (buildingFaction?.Contains("Shepherds") == true || buildingFaction?.Contains("Elders") == true)
+            {
+                buildingRegion = WorldRegion.Enbesa;
             }
 
             if (string.IsNullOrWhiteSpace(buildingName))
