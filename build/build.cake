@@ -2,14 +2,22 @@
 const string xunitRunnerVersion = "2.4.1";
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.6.1
+#tool nuget:?package=ReportGenerator&version=4.8.1
 
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
 
-var target = Argument<string>("target", "Default");
-var configuration = Argument<string>("configuration", "DEBUG");
+var target = Argument<string>("Target", "Default");
+
+// Configuration - The build configuration (Debug/Release) to use.
+// 1. If command line parameter parameter passed, use that.
+// 2. Otherwise if an Environment variable exists, use that.
+// 3. If nothing is set, use RELEASE
+var configuration = 
+    HasArgument("Configuration") ? Argument<string>("Configuration") :
+    EnvironmentVariable("Configuration") != null ? EnvironmentVariable("Configuration") : "RELEASE";
+//var configuration = Argument<string>("configuration", "DEBUG");
 
 //from cake source:
 /// <summary>
@@ -108,9 +116,16 @@ var restoreNuGetTask = Task("Restore-NuGet-Packages")
 {
     foreach (var curSolutionFile in solutionFiles)
     {
+        var settings = new DotNetCoreRestoreSettings
+        {
+            Verbosity = DotNetCoreVerbosity.Minimal,
+        };
+
         var curSolutionFileName = System.IO.Path.GetFileName(curSolutionFile);
         Information($"{DateTime.Now:hh:mm:ss.ff} restoring NuGet packages for {curSolutionFileName}");
-        NuGetRestore(curSolutionFile);
+        
+        DotNetCoreRestore(curSolutionFile, settings);
+        //NuGetRestore(curSolutionFile);
     }
 });
 
@@ -146,41 +161,62 @@ var buildTask = Task("Build")
     foreach (var curSolutionFile in solutionFiles)
     {
         var curSolutionFileName = System.IO.Path.GetFileName(curSolutionFile);
-        var msBuildSettings = new MSBuildSettings()
-        {
-            Configuration = configuration,
-            PlatformTarget = PlatformTarget.MSIL,
-            ToolVersion = (Cake.Common.Tools.MSBuild.MSBuildToolVersion)msbuildVersion,
-            MaxCpuCount = 0,//use all available
-            NoConsoleLogger = true,
-            DetailedSummary = true,
-            Verbosity = Verbosity.Minimal,
-            NoLogo = true
-        };
+var dotNetCoreBuildSettings = new DotNetCoreBuildSettings
+{
+NoRestore = true,
+NoLogo = true,
+Verbosity = DotNetCoreVerbosity.Minimal,
+Configuration = configuration,
+MSBuildSettings = new DotNetCoreMSBuildSettings
+{
+    BinaryLogger = new MSBuildBinaryLoggerSettings
+    {
+        Enabled = true,
+        FileName = $"{logDirectory}/{curSolutionFileName}.binlog"
+    },
+    DisableConsoleLogger = true,
+    MaxCpuCount = 0,//use all available
+    Verbosity = DotNetCoreVerbosity.Minimal,
+    NoLogo = true,
+}
+};
 
-        if(useBinaryLog)
-        {
-            msBuildSettings.BinaryLogger = new MSBuildBinaryLogSettings
-            {
-                Enabled = true,
-                FileName = $"{logDirectory}/{curSolutionFileName}.binlog"
-            };
-        }
-        else
-        {
-            msBuildSettings.FileLoggers.Add(new MSBuildFileLogger
-            {
-                LogFile = $"{logDirectory}/{curSolutionFileName}.log"
-            });
-        }
+        // var msBuildSettings = new MSBuildSettings()
+        // {
+        //     Configuration = configuration,
+        //     PlatformTarget = PlatformTarget.MSIL,
+        //     ToolVersion = (Cake.Common.Tools.MSBuild.MSBuildToolVersion)msbuildVersion,
+        //     MaxCpuCount = 0,//use all available
+        //     NoConsoleLogger = true,
+        //     DetailedSummary = true,
+        //     Verbosity = Verbosity.Minimal,
+        //     NoLogo = true
+        // };
 
-        msBuildSettings = msBuildSettings.WithTarget("Clean");
-        msBuildSettings = msBuildSettings.WithTarget("Restore");
-        msBuildSettings = msBuildSettings.WithTarget("Build");
+        // if(useBinaryLog)
+        // {
+        //     msBuildSettings.BinaryLogger = new MSBuildBinaryLogSettings
+        //     {
+        //         Enabled = true,
+        //         FileName = $"{logDirectory}/{curSolutionFileName}.binlog"
+        //     };
+        // }
+        // else
+        // {
+        //     msBuildSettings.FileLoggers.Add(new MSBuildFileLogger
+        //     {
+        //         LogFile = $"{logDirectory}/{curSolutionFileName}.log"
+        //     });
+        // }
+
+        // msBuildSettings = msBuildSettings.WithTarget("Clean");
+        // msBuildSettings = msBuildSettings.WithTarget("Restore");
+        // msBuildSettings = msBuildSettings.WithTarget("Build");
 
         Information($"{DateTime.Now:hh:mm:ss.ff} compiling {curSolutionFileName}");
 
-        MSBuild(curSolutionFile, msBuildSettings);
+DotNetCoreBuild(curSolutionFile, dotNetCoreBuildSettings);
+        //MSBuild(curSolutionFile, msBuildSettings);
         Information("");
     }
 });
@@ -195,9 +231,16 @@ var runUnitTestsTask = Task("Run-Unit-Tests")
     foreach (var curTestAssembly in testAssemblies)
     {
         Information(curTestAssembly);
+DotNetCoreTest(curTestAssembly.FullPath, new DotNetCoreTestSettings
+                {
+                    Configuration = configuration,
+                    NoRestore = true,
+                    NoBuild = true
+                });
     }
 
     Information("");
+
 
 var xUnit2Settings = new XUnit2Settings
         {
