@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using AnnoDesigner.Core;
 using AnnoDesigner.Core.Helper;
+using AnnoDesigner.Core.Layout.Models;
 using AnnoDesigner.Core.Models;
 using AnnoDesigner.Core.Presets.Models;
 using AnnoDesigner.Core.RecentFiles;
@@ -28,6 +30,7 @@ namespace AnnoDesigner.Tests
         private readonly ILocalizationHelper _mockedLocalizationHelper;
         private readonly IUpdateHelper _mockedUpdateHelper;
         private readonly IFileSystem _mockedFileSystem;
+        private readonly IAdjacentCellGrouper _mockedCellGrouper;
 
         public MainViewModelTests()
         {
@@ -58,6 +61,7 @@ namespace AnnoDesigner.Tests
 
             _mockedMessageBoxService = new Mock<IMessageBoxService>().Object;
             _mockedUpdateHelper = new Mock<IUpdateHelper>().Object;
+            _mockedCellGrouper = Mock.Of<IAdjacentCellGrouper>();
         }
 
         private MainViewModel GetViewModel(ICommons commonsToUse = null,
@@ -67,7 +71,9 @@ namespace AnnoDesigner.Tests
             IUpdateHelper updateHelperToUse = null,
             ILocalizationHelper localizationHelperToUse = null,
             IAnnoCanvas annoCanvasToUse = null,
-            IFileSystem fileSystemToUse = null)
+            IFileSystem fileSystemToUse = null,
+            IAdjacentCellGrouper adjacentCellGrouperToUse = null,
+            ILayoutLoader layoutLoaderToUse = null)
         {
             return new MainViewModel(commonsToUse ?? _mockedCommons,
                 appSettingsToUse ?? _mockedAppSettings,
@@ -75,7 +81,9 @@ namespace AnnoDesigner.Tests
                 messageBoxServiceToUse ?? _mockedMessageBoxService,
                 updateHelperToUse ?? _mockedUpdateHelper,
                 localizationHelperToUse ?? _mockedLocalizationHelper,
-                fileSystemToUse ?? _mockedFileSystem)
+                fileSystemToUse ?? _mockedFileSystem,
+                adjacentCellGrouper: adjacentCellGrouperToUse ?? _mockedCellGrouper,
+                layoutLoaderToUse: layoutLoaderToUse)
             {
                 AnnoCanvas = annoCanvasToUse ?? _mockedAnnoCanvas
             };
@@ -94,6 +102,7 @@ namespace AnnoDesigner.Tests
             Assert.NotNull(viewModel.CloseWindowCommand);
             Assert.NotNull(viewModel.CanvasResetZoomCommand);
             Assert.NotNull(viewModel.CanvasNormalizeCommand);
+            Assert.NotNull(viewModel.MergeRoadsCommand);
             Assert.NotNull(viewModel.LoadLayoutFromJsonCommand);
             Assert.NotNull(viewModel.UnregisterExtensionCommand);
             Assert.NotNull(viewModel.RegisterExtensionCommand);
@@ -598,7 +607,7 @@ namespace AnnoDesigner.Tests
         }
 
         [Theory]
-        [InlineData("id", Key.A, ModifierKeys.Alt, Key.S, ModifierKeys.Control | ModifierKeys.Shift, @"{""id"":{""Key"":62,""MouseAction"":0,""Modifiers"":6,""Type"":1}}")]
+        [InlineData("id", Key.A, ModifierKeys.Alt, Key.S, ModifierKeys.Control | ModifierKeys.Shift, @"{""id"":{""Key"":""S"",""MouseAction"":""None"",""Modifiers"":""Control, Shift"",""Type"":""KeyGesture""}}")]
         [InlineData("id", Key.A, ModifierKeys.Alt, Key.A, ModifierKeys.Alt, "{}")]
         public void SaveSettings_IsCalled_ShouldSaveRemappedHotkeys(string id, Key key, ModifierKeys modifiers, Key newKey, ModifierKeys newModifiers, string expectedJsonString)
         {
@@ -985,6 +994,124 @@ namespace AnnoDesigner.Tests
             // Assert
             Assert.Equal(languageToSet.Name, commons.Object.CurrentLanguage);
             Assert.False(viewModel.IsLanguageChange);
+        }
+
+        #endregion
+
+        #region MergeRoads tests
+
+        [Fact]
+        public void MergeRoads_IsCalled_RoadColorAndBorderIsPreserved()
+        {
+            // Arrange
+            var roads = new List<LayoutObject>()
+            {
+                new LayoutObject(
+                    new AnnoObject()
+                    {
+                        Position = new Point(1, 1),
+                        Size = new Size(1, 1),
+                        Road = true,
+                        Color = new SerializableColor(255, 0, 0, 0),
+                        Borderless = false
+                    }, null, null, null),
+                new LayoutObject(
+                    new AnnoObject()
+                    {
+                        Position = new Point(2, 1),
+                        Size = new Size(1, 1),
+                        Road = true,
+                        Color = new SerializableColor(255, 0, 0, 0),
+                        Borderless = true
+                    }, null, null, null),
+                new LayoutObject(
+                    new AnnoObject()
+                    {
+                        Position = new Point(3, 1),
+                        Size = new Size(1, 1),
+                        Road = true,
+                        Color = new SerializableColor(255, 100, 100, 100),
+                        Borderless = true
+                    }, null, null, null)
+            };
+            _mockedAnnoCanvas.PlacedObjects.AddRange(roads.Select(r => (r, r.GridRect)));
+            var cellGrouper = new Mock<IAdjacentCellGrouper>();
+
+            var viewModel = GetViewModel(adjacentCellGrouperToUse: cellGrouper.Object);
+
+            // Act
+            viewModel.MergeRoads(null);
+
+            // Assert
+            cellGrouper.Verify(g => g.GroupAdjacentCells(It.IsAny<LayoutObject[][]>(), It.IsAny<bool>()), Times.Never);
+            Assert.Equal(3, _mockedAnnoCanvas.PlacedObjects.Count());
+        }
+
+        #endregion
+
+        #region SaveFile tests
+
+        [Fact]
+        public void SaveFile_LayoutVersionChangedByUser_ShouldUseLayoutVersion()
+        {
+            // Arrange
+            LayoutFile layoutFileUsedToSave = null;
+            var versionToSave = new Version(42, 42, 42, 42);
+
+            var mockedLayoutLoader = new Mock<ILayoutLoader>();
+            _ = mockedLayoutLoader.Setup(x => x.SaveLayout(It.IsAny<LayoutFile>(), It.IsAny<string>()))
+                .Callback<LayoutFile, string>((layout, filePath) => layoutFileUsedToSave = layout);
+
+            var viewModel = GetViewModel(layoutLoaderToUse: mockedLayoutLoader.Object);
+            viewModel.LayoutSettingsViewModel.LayoutVersion = versionToSave;
+
+            // Act
+            viewModel.SaveFile("dummy");
+
+            // Assert
+            mockedLayoutLoader.Verify(x => x.SaveLayout(It.IsAny<LayoutFile>(), It.IsAny<string>()), Times.Once());
+            Assert.Equal(versionToSave, layoutFileUsedToSave.LayoutVersion);
+        }
+
+        [Fact]
+        public void SaveFile_ShouldNormalizeCanvas()
+        {
+            // Arrange
+            int calledBorderWidth = -1;
+            var mockedCanvas = new Mock<IAnnoCanvas>();
+            _ = mockedCanvas.Setup(x => x.Normalize(It.IsAny<int>()))
+                .Callback<int>(x => calledBorderWidth = x);
+
+            var mockedLayoutLoader = new Mock<ILayoutLoader>();
+
+            var viewModel = GetViewModel(annoCanvasToUse: mockedCanvas.Object, layoutLoaderToUse: mockedLayoutLoader.Object);
+
+            // Act
+            viewModel.SaveFile("dummy");
+
+            // Assert
+            mockedCanvas.Verify(x => x.Normalize(It.IsAny<int>()), Times.Once());
+            Assert.Equal(1, calledBorderWidth);
+        }
+
+        [Fact]
+        public void SaveFile_ExceptionIsRaised_ShouldShowError()
+        {
+            // Arrange
+            var expectedException = new Exception("This should raise.");
+            var mockedLayoutLoader = new Mock<ILayoutLoader>();
+            _ = mockedLayoutLoader.Setup(x => x.SaveLayout(It.IsAny<LayoutFile>(), It.IsAny<string>())).Throws(expectedException);
+
+            var mockedMessageBoxService = new Mock<IMessageBoxService>();
+
+            var viewModel = GetViewModel(layoutLoaderToUse: mockedLayoutLoader.Object,
+                messageBoxServiceToUse: mockedMessageBoxService.Object);
+
+            // Act
+            viewModel.SaveFile("dummy");
+
+            // Assert
+            mockedMessageBoxService.Verify(x => x.ShowError(It.IsAny<object>(), expectedException.Message, It.IsAny<string>()), Times.Once());
         }
 
         #endregion

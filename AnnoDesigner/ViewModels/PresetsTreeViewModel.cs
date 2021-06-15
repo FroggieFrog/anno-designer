@@ -203,10 +203,17 @@ namespace AnnoDesigner.ViewModels
             var groupedGames = filteredBuildingList.GroupBy(x => x.Header).OrderBy(x => x.Key);
             foreach (var curGame in groupedGames)
             {
+                var gameHeader = curGame.Key;
+                var gameVersion = GetGameVersion(curGame.Key);
+                if (gameVersion == CoreConstants.GameVersion.Unknown)
+                {
+                    gameHeader = _localizationHelper.GetLocalization(curGame.Key);
+                }
+
                 var gameItem = new GameHeaderTreeItem
                 {
-                    Header = curGame.Key,
-                    GameVersion = GetGameVersion(curGame.Key),
+                    Header = gameHeader,
+                    GameVersion = gameVersion,
                     Id = ++itemId
                 };
 
@@ -528,11 +535,27 @@ namespace AnnoDesigner.ViewModels
                 }
             }
 
-            //no child matches -> hide item
+            //no child matches -> check if header of current node is matching
             if (!anyChildMatches)
             {
-                curItem.IsVisible = false;
-                curItem.IsExpanded = false;
+                var currentHeaderMatches = curItem.Header.Contains(FilterText, StringComparison.OrdinalIgnoreCase);
+                if (currentHeaderMatches)
+                {
+                    foreach (var curChild in curItem.Children)
+                    {
+                        curChild.IsVisible = true;
+                    }
+
+                    curItem.IsVisible = true;
+                    //do not expand to avoid clutter in the view
+                    curItem.IsExpanded = false;
+                }
+                //no child matches -> hide item
+                else
+                {
+                    curItem.IsVisible = false;
+                    curItem.IsExpanded = false;
+                }
             }
             else
             {

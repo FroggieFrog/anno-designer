@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AnnoDesigner.Core.Layout.Models
 {
@@ -11,6 +12,10 @@ namespace AnnoDesigner.Core.Layout.Models
         public double MinX { get; set; }
 
         public double MinY { get; set; }
+
+        public double MaxX { get; set; }
+
+        public double MaxY { get; set; }
 
         public double UsedAreaWidth { get; set; }
 
@@ -24,5 +29,10 @@ namespace AnnoDesigner.Core.Layout.Models
         /// The efficiency of the layout in percent.
         /// </summary>
         public double Efficiency { get; set; }
+
+        public static explicit operator Rect(StatisticsCalculationResult a)
+        {
+            return new Rect(a.MinX, a.MinY, a.UsedAreaWidth, a.UsedAreaHeight);
+        }
     }
 }

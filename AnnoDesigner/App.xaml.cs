@@ -10,6 +10,7 @@ using System.Windows;
 using AnnoDesigner.Core.Extensions;
 using AnnoDesigner.Core.Helper;
 using AnnoDesigner.Core.Models;
+using AnnoDesigner.Core.Presets.Loader;
 using AnnoDesigner.Core.RecentFiles;
 using AnnoDesigner.Core.Services;
 using AnnoDesigner.Models;
@@ -209,7 +210,9 @@ namespace AnnoDesigner
             var recentFilesSerializer = new RecentFilesAppSettingsSerializer(_appSettings);
 
             IRecentFilesHelper recentFilesHelper = new RecentFilesHelper(recentFilesSerializer, _fileSystem);
-            var mainVM = new MainViewModel(_commons, _appSettings, recentFilesHelper, _messageBoxService, _updateHelper, _localizationHelper, _fileSystem);
+            ITreeLocalizationLoader treeLocalizationLoader = new TreeLocalizationLoader(_fileSystem);
+
+            var mainVM = new MainViewModel(_commons, _appSettings, recentFilesHelper, _messageBoxService, _updateHelper, _localizationHelper, _fileSystem, treeLocalizationLoader: treeLocalizationLoader);
 
             //TODO MainWindow.ctor calls AnnoCanvas.ctor loads presets -> change logic when to load data 
             MainWindow = new MainWindow(_appSettings);

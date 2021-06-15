@@ -1,8 +1,8 @@
-#addin nuget:?package=Cake.FileHelpers&version=3.3.0
+#addin nuget:?package=Cake.FileHelpers&version= 4.0.1
 const string xunitRunnerVersion = "2.4.1";
 #tool nuget:?package=xunit.runner.console&version=2.4.1
-#tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.8.1
+#tool nuget:?package=OpenCover&version=4.7.1204
+#tool nuget:?package=ReportGenerator&version=4.8.9
 
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -140,16 +140,27 @@ var updateAssemblyInfoTask = Task("Update-Assembly-Info")
                         "(?<=AssemblyFileVersion\\(\")(.+?)(?=\"\\))",
                         $"{versionNumber}.0.0");
 
+    ReplaceRegexInFiles("./../AnnoDesigner.Core/Properties/AssemblyInfo.cs",
+                        "(?<=AssemblyVersion\\(\")(.+?)(?=\"\\))",
+                        $"{versionNumber}.0.0");
+    ReplaceRegexInFiles("./../AnnoDesigner.Core/Properties/AssemblyInfo.cs",
+                        "(?<=AssemblyFileVersion\\(\")(.+?)(?=\"\\))",
+                        $"{versionNumber}.0.0");
+
     ReplaceRegexInFiles("./../PresetParser/Properties/AssemblyInfo.cs",
                         "(?<=AssemblyVersion\\(\")(.+?)(?=\"\\))",
                         $"{versionNumber}.0.0");
     ReplaceRegexInFiles("./../PresetParser/Properties/AssemblyInfo.cs",
                         "(?<=AssemblyFileVersion\\(\")(.+?)(?=\"\\))",
                         $"{versionNumber}.0.0");
-    
+
     ReplaceRegexInFiles("./../AnnoDesigner/Constants.cs",
-                        "(?<=double Version = )(\\d.\\d)",
+                        "(?<= new Version\\()(.+?)(?=\\);)",
                         $"{versionNumber}");
+    //Replace dot (.) with comma (,)
+    ReplaceRegexInFiles("./../AnnoDesigner/Constants.cs",
+                        "(?<=new Version\\([1-9]{1})([.])(?=[0-9]+\\);)",
+                        ", ");
 });
 
 var buildTask = Task("Build")
@@ -314,12 +325,13 @@ var copyFilesTask = Task("Copy-Files")
     CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/colors.json", $"{outDirectory}");
     CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/icons.json", $"{outDirectory}");
     CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/Microsoft.Xaml.Behaviors.dll", $"{outDirectory}");
+	CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/Newtonsoft.Json.dll", $"{outDirectory}");
     CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/NLog.dll", $"{outDirectory}");
     CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/Octokit.dll", $"{outDirectory}");
     CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/presets.json", $"{outDirectory}");
+	CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/System.IO.Abstractions.dll", $"{outDirectory}");
+	CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/treeLocalization.json", $"{outDirectory}");
 	CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/Xceed.Wpf.Toolkit.dll", $"{outDirectory}");
-    CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/System.IO.Abstractions.dll", $"{outDirectory}");
-	CopyFileToDirectory($"./../AnnoDesigner/bin/{configuration}/net472/Newtonsoft.Json.dll", $"{outDirectory}");
 
     Information("");
 });

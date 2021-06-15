@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using Newtonsoft.Json;
 
 namespace AnnoDesigner.Core.DataStructures
 {
@@ -68,7 +64,7 @@ namespace AnnoDesigner.Core.DataStructures
                 isDirty = false;
 
                 var w = Extent.Width / 2;
-                var h = Extent.Width / 2;
+                var h = Extent.Height / 2;
 
                 topRightBounds = new Rect(Extent.Left + w, Extent.Top, w, h);
                 topLeftBounds = new Rect(Extent.Left, Extent.Top, w, h);
@@ -156,20 +152,35 @@ namespace AnnoDesigner.Core.DataStructures
                 {
                     topRight.GetItemsIntersecting(items, bounds);
                 }
+
                 if (topLeft != null && topLeft.Extent.IntersectsWith(bounds))
                 {
                     topLeft.GetItemsIntersecting(items, bounds);
                 }
+
                 if (bottomRight != null && bottomRight.Extent.IntersectsWith(bounds))
                 {
                     bottomRight.GetItemsIntersecting(items, bounds);
                 }
+
                 if (bottomLeft != null && bottomLeft.Extent.IntersectsWith(bounds))
                 {
                     bottomLeft.GetItemsIntersecting(items, bounds);
                 }
+
                 //add all the items in this quadrant that intersect the given bounds
-                items.AddRange(ItemsInQuadrant.Where(_ => _.Bounds.IntersectsWith(bounds)).Select(_ => _.Item));
+                items.AddRange(GetIntersectingItmesInQuadrant(bounds));
+            }
+
+            private IEnumerable<T> GetIntersectingItmesInQuadrant(Rect boundsToCheck)
+            {
+                foreach (var (Item, Bounds) in ItemsInQuadrant)
+                {
+                    if (Bounds.IntersectsWith(boundsToCheck))
+                    {
+                        yield return Item;
+                    }
+                }
             }
 
             /// <summary>
@@ -322,9 +333,9 @@ namespace AnnoDesigner.Core.DataStructures
         /// </summary>
         public void ReIndex()
         {
-                var oldRoot = root;
-                root = new Quadrant(Extent);
-                AddRange(oldRoot.AllWithBounds());
+            var oldRoot = root;
+            root = new Quadrant(Extent);
+            AddRange(oldRoot.AllWithBounds());
         }
 
         /// <summary>
@@ -383,7 +394,7 @@ namespace AnnoDesigner.Core.DataStructures
         {
             var items = new List<T>(previousCount);
             root.GetItemsIntersecting(items, bounds);
-            previousCount = items.Count; 
+            previousCount = items.Count;
             return items;
         }
 

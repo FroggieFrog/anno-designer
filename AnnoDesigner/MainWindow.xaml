@@ -128,6 +128,7 @@
                           ItemsSource="{Binding Languages}">
                     <MenuItem.Resources>
                         <Image x:Key="flagImage"
+                               Height="22"
                                Source="{Binding FlagPath}"
                                x:Shared="False" />
                     </MenuItem.Resources>
@@ -162,11 +163,30 @@
                               IsEnabled="{Binding StatisticsViewModel.IsVisible, Mode=OneWay}"
                               Command="{Binding ShowStatisticsBuildingCountCommand}" />
                 </MenuItem>
+                <MenuItem Header="{l:Localize View}">
+                    <MenuItem Header="{l:Localize ShowGrid}"
+                              IsCheckable="True"
+                              IsChecked="{Binding CanvasShowGrid}" />
+                    <MenuItem Header="{l:Localize ShowLabels}"
+                              IsCheckable="True"
+                              IsChecked="{Binding CanvasShowLabels}" />
+                    <MenuItem Header="{l:Localize ShowIcons}"
+                              IsCheckable="True"
+                              IsChecked="{Binding CanvasShowIcons}" />
+                    <MenuItem Header="{l:Localize ShowTrueInfluenceRange}"
+                              IsCheckable="True"
+                              IsChecked="{Binding CanvasShowTrueInfluenceRange}" />
+                    <MenuItem Header="{l:Localize ShowInfluences}"
+                              IsCheckable="True"
+                              IsChecked="{Binding CanvasShowInfluences}" />
+                </MenuItem>
                 <MenuItem Header="{l:Localize Tools}">
                     <MenuItem Header="{l:Localize Normalize}"
                               Command="{Binding CanvasNormalizeCommand}" />
                     <MenuItem Header="{l:Localize ResetZoom}"
                               Command="{Binding CanvasResetZoomCommand}" />
+                    <MenuItem Header="{l:Localize MergeRoads}"
+                              Command="{Binding MergeRoadsCommand}" />
                     <Separator />
                     <MenuItem Header="{l:Localize RegisterFileExtension}"
                               Command="{Binding RegisterExtensionCommand}" />
@@ -193,27 +213,6 @@
                     <MenuItem Header="{l:Localize ViewLicenses}"
                               Command="{Binding ShowLicensesWindowCommand}" />
                 </MenuItem>
-                <Separator />
-                <MenuItem Header="{l:Localize ShowGrid}"
-                          IsCheckable="True"
-                          IsChecked="{Binding CanvasShowGrid}"
-                          TabIndex="26" />
-                <MenuItem Header="{l:Localize ShowLabels}"
-                          IsCheckable="True"
-                          IsChecked="{Binding CanvasShowLabels}"
-                          TabIndex="27" />
-                <MenuItem Header="{l:Localize ShowIcons}"
-                          IsCheckable="True"
-                          IsChecked="{Binding CanvasShowIcons}"
-                          TabIndex="28" />
-                <MenuItem Header="{l:Localize ShowTrueInfluenceRange}"
-                          IsCheckable="True"
-                          IsChecked="{Binding CanvasShowTrueInfluenceRange}"
-                          TabIndex="29" />
-                <MenuItem Header="{l:Localize ShowInfluences}"
-                          IsCheckable="True"
-                          IsChecked="{Binding CanvasShowInfluences}"
-                          TabIndex="30" />
             </Menu>
 
             <Grid x:Name="gridMain"
@@ -262,6 +261,17 @@
                        Grid.Column="2"
                        Grid.Row="1"
                        LastChildFill="True">
+                <GroupBox Header="{l:Localize LayoutSettings}"
+                          DockPanel.Dock="Top">
+                    <DockPanel LastChildFill="False">
+                        <Label Content="{l:Localize Version}" />
+                        <TextBox DockPanel.Dock="Right"
+                                 Height="23"
+                                 IsEnabled="True"
+                                 Text="{Binding LayoutSettingsViewModel.LayoutVersionDisplayValue}"
+                                 Width="140" />
+                    </DockPanel>
+                </GroupBox>
                 <GroupBox Header="{l:Localize BuildingSettings}"
                           DockPanel.Dock="Top">
                     <StackPanel>
@@ -467,6 +477,12 @@
                                      Height="10"
                                      IsEnabled="False"
                                      Text="{Binding BuildingSettingsViewModel.BuildingIdentifier}"
+                                     Visibility="Collapsed"
+                                     Width="140" />
+                            <TextBox DockPanel.Dock="Right"
+                                     Height="10"
+                                     IsEnabled="False"
+                                     Text="{Binding BuildingSettingsViewModel.BuildingRealName}"
                                      Visibility="Collapsed"
                                      Width="140" />
                         </DockPanel>
