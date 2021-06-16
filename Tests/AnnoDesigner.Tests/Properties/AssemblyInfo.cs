@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+[assembly: SupportedOSPlatform("windows7.0")]// see: https://github.com/dotnet/sdk/issues/14502
 [assembly: AssemblyTitle("AnnoDesigner.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
