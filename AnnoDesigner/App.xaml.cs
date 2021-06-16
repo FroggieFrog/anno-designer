@@ -154,7 +154,7 @@ namespace AnnoDesigner
 
                     if (!createdNewMutex)
                     {
-                        _messageBoxService.ShowMessage(Localization.Localization.Instance.GetLocalization("AnotherInstanceIsAlreadyRunning"));
+                        _messageBoxService.ShowMessage(_localizationHelper.GetLocalization("AnotherInstanceIsAlreadyRunning"));
                         Environment.Exit(-1);
                     }
                 }
